@@ -13,7 +13,6 @@ public class DaoServerConnection {
 	private final String IP_ADDRESS = "127.0.0.1";
 	private final int PORT = 2024;
 	private InetSocketAddress address;
-	private Socket socketToServer;
 	private Scanner sc = new Scanner(System.in);
 
 	public static DaoServerConnection dao;
@@ -26,23 +25,26 @@ public class DaoServerConnection {
 		return (dao == null) ? dao = new DaoServerConnection() : dao;
 	}
 
-	public void prueba() {
+	public void conexion() {
 
 		boolean connectionStatus = true;
 
-		try {
-			socketToServer = new Socket();
+		try (Socket socketToServer = new Socket();) {
+			
 			socketToServer.connect(address);
+
 			PrintStream ps = new PrintStream(socketToServer.getOutputStream());
+			InputStreamReader isr = new InputStreamReader(socketToServer.getInputStream());
+			BufferedReader br = new BufferedReader(isr);
+
 			while (connectionStatus) {
 
+				// Output message
 				System.out.println("Escribe mensaje al server: ");
 				String mensaje = sc.nextLine();
 				ps.println(mensaje);
 
-				InputStreamReader isr = new InputStreamReader(socketToServer.getInputStream());
-				BufferedReader br = new BufferedReader(isr);
-
+				// Input message
 				String entrada = br.readLine();
 
 				if (entrada.equalsIgnoreCase("OK")) {
@@ -52,13 +54,11 @@ public class DaoServerConnection {
 				} else {
 					System.out.println(entrada);
 				}
-
 			}
+
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 	}
-
 }
