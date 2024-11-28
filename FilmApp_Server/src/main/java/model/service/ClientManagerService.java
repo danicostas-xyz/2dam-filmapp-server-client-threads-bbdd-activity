@@ -8,41 +8,47 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.net.Socket;
 
-public class ClientManagerService implements Runnable{
-	
+public class ClientManagerService implements Runnable {
+
 	private Socket socketToClient;
-	
+	private Thread thread;
+	private static int num_cliente;
+
 	public ClientManagerService(Socket socketToClient) {
 		this.socketToClient = socketToClient;
+		thread = new Thread(this, "Cliente " + num_cliente);
+		thread.start();
 	}
-	
 
 	@Override
 	public void run() {
-		
-		String entrada = "";
-		try (InputStream input = socketToClient.getInputStream();) {
-			InputStreamReader isr = new InputStreamReader(input);
+		boolean connectionStatus = true;
+
+		try (InputStreamReader isr = new InputStreamReader(socketToClient.getInputStream())) {
 			BufferedReader br = new BufferedReader(isr);
-			while (br != null) {
-				entrada = br.readLine();
+
+			while (connectionStatus) {
+
+				String entrada = br.readLine();
+				System.out.println("Mensaje del cliente: ");
+				PrintStream ps = new PrintStream(socketToClient.getOutputStream());
+
+				if (entrada.equalsIgnoreCase("FIN")) {
+					System.out.println("Cliente cierra la conexión");
+					connectionStatus = false;
+					ps.println("OK");
+					socketToClient.close();
+				} else {
+					System.out.println(entrada);
+					ps.println(entrada + "de vuelta");
+				}
 			}
-			
+
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		try {
-			OutputStream os = socketToClient.getOutputStream();
-			PrintStream ps = new PrintStream(os);
-			ps.print(entrada + " de vuelta.");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		
+
 	}
 
 }

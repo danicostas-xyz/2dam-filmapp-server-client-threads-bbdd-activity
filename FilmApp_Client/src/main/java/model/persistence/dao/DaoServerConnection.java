@@ -2,12 +2,11 @@ package model.persistence.dao;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.PrintStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.util.Scanner;
 
 public class DaoServerConnection {
 
@@ -15,6 +14,7 @@ public class DaoServerConnection {
 	private final int PORT = 2024;
 	private InetSocketAddress address;
 	private Socket socketToServer;
+	private Scanner sc = new Scanner(System.in);
 
 	public static DaoServerConnection dao;
 
@@ -26,33 +26,38 @@ public class DaoServerConnection {
 		return (dao == null) ? dao = new DaoServerConnection() : dao;
 	}
 
-	public void prueba(String m) {
+	public void prueba() {
+
+		boolean connectionStatus = true;
+
 		try {
 			socketToServer = new Socket();
 			socketToServer.connect(address);
-			OutputStream os = socketToServer.getOutputStream();
-			PrintStream ps = new PrintStream(os);
-			ps.print(m);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		String entrada = "";
-		
-		try (InputStream input = socketToServer.getInputStream();) {
-			InputStreamReader isr = new InputStreamReader(input);
-			BufferedReader br = new BufferedReader(isr);
-			while (br != null) {
-				entrada = br.readLine();
+			PrintStream ps = new PrintStream(socketToServer.getOutputStream());
+			while (connectionStatus) {
+
+				System.out.println("Escribe mensaje al server: ");
+				String mensaje = sc.nextLine();
+				ps.println(mensaje);
+
+				InputStreamReader isr = new InputStreamReader(socketToServer.getInputStream());
+				BufferedReader br = new BufferedReader(isr);
+
+				String entrada = br.readLine();
+
+				if (entrada.equalsIgnoreCase("OK")) {
+					System.out.println("Server cierra conexión");
+					connectionStatus = false;
+					socketToServer.close();
+				} else {
+					System.out.println(entrada);
+				}
+
 			}
-			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		System.out.println(entrada);
 
 	}
 

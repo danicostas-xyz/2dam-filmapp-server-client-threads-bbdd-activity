@@ -20,12 +20,13 @@ public class Server {
 
 			try (ServerSocket serverSocket = new ServerSocket();) {
 				InetSocketAddress address = new InetSocketAddress(PORT);
+				
 				serverSocket.bind(address);
 				
 				while(true) {
 					System.out.println("Waiting for a client...");
 					Socket socketToClient = serverSocket.accept();
-					new Thread(new ClientManagerService(socketToClient)).start();
+					new ClientManagerService(socketToClient);
 				}
 				
 			} catch (IOException e) {
