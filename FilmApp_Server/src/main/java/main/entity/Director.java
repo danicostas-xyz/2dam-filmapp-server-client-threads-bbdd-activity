@@ -7,16 +7,12 @@ public class Director {
 
 	private int id;
 	private String name;
-	private String primer_apellido;
-	private String segundo_apellido;
 	private List<Film> filmList;
 
-	public Director(int id, String name, String primer_apellido, String segundo_apellido, List<Film> filmList) {
+	public Director(int id, String name, List<Film> filmList) {
 		super();
 		this.id = id;
 		this.name = name;
-		this.primer_apellido = primer_apellido;
-		this.segundo_apellido = segundo_apellido;
 		this.filmList = filmList;
 	}
 
@@ -40,21 +36,6 @@ public class Director {
 		this.name = name;
 	}
 
-	public String getPrimer_apellido() {
-		return primer_apellido;
-	}
-
-	public void setPrimer_apellido(String primer_apellido) {
-		this.primer_apellido = primer_apellido;
-	}
-
-	public String getSegundo_apellido() {
-		return segundo_apellido;
-	}
-
-	public void setSegundo_apellido(String segundo_apellido) {
-		this.segundo_apellido = segundo_apellido;
-	}
 
 	public List<Film> getFilmList() {
 		return filmList;
@@ -66,8 +47,7 @@ public class Director {
 
 	@Override
 	public String toString() {
-		return "Director [id=" + id + ", name=" + name + ", primer_apellido=" + primer_apellido + ", segundo_apellido="
-				+ segundo_apellido + ", filmList=" + filmList + "]";
+		return "Director [id=" + id + ", name=" + name + ", filmList=" + filmList + "]";
 	}
 
 	@Override
