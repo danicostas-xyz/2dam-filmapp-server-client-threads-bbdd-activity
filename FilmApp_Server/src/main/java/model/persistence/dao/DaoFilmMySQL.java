@@ -106,11 +106,10 @@ public class DaoFilmMySQL implements DaoFilm {
 		}
 
 		return filmList;
-
 	}
 
 	@Override
-	public Integer updateFilmById(int filmID) {
+	public Integer updateFilmById(Film f) {
 
 		Integer result = null;
 
@@ -118,6 +117,10 @@ public class DaoFilmMySQL implements DaoFilm {
 
 			String query = "UPDATE film SET title=?, id_director=?, rating=? WHERE id=?";
 			PreparedStatement ps = conn.prepareStatement(query);
+			ps.setString(1, f.getTitle());
+			ps.setInt(2, f.getDirector().getId());
+			ps.setDouble(3, f.getRating());
+			ps.setInt(4, f.getId());
 			result = ps.executeUpdate();
 
 		} catch (SQLException e) {
@@ -136,6 +139,7 @@ public class DaoFilmMySQL implements DaoFilm {
 
 			String query = "DELETE FROM film WHERE id=?";
 			PreparedStatement ps = conn.prepareStatement(query);
+			ps.setInt(1, filmID);
 			result = ps.executeUpdate();
 
 		} catch (SQLException e) {

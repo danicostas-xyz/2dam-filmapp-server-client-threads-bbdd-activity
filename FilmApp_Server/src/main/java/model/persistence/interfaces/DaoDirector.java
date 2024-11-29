@@ -1,9 +1,6 @@
 package model.persistence.interfaces;
 
-import java.util.List;
-
 import main.entity.Director;
-import main.entity.Film;
 
 public interface DaoDirector {
 
@@ -40,12 +37,12 @@ public interface DaoDirector {
 	/**
 	 * Modifica un director de la persistencia buscando por el ID del director.
 	 * 
-	 * @param directorID, el ID del director a modificar.
+	 * @param d, el Director a modificar.
 	 * @return 1 en caso de que se haya modificado correctamente, 0 en caso de que
 	 *         no se haya modificado por no encontrarse el director, null en caso de
 	 *         que haya sucedido una I/O o SQL Exception
 	 */
-	Integer updateDirectorById(int directorID);
+	Integer updateDirectorById(Director d);
 
 	/**
 	 * Elimina un director de la persistencia buscando por el ID del director.

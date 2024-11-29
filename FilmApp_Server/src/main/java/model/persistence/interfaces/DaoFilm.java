@@ -41,12 +41,12 @@ public interface DaoFilm {
 	/**
 	 * Modifica una película de la persistencia buscando por el ID de la película.
 	 * 
-	 * @param filmID, el ID de la película a modificar.
+	 * @param f, la película a modificar.
 	 * @return 1 en caso de que se haya modificado correctamente, 0 en caso de que
 	 *         no se haya modificado por no encontrarse la película, null en caso de
 	 *         que haya sucedido una I/O o SQL Exception
 	 */
-	Integer updateFilmById(int filmID);
+	Integer updateFilmById(Film f) ;
 	
 	/**
 	 * Recupera una lista de películas buscando por el ID del director.
