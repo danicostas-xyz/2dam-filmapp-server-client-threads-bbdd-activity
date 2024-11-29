@@ -27,6 +27,7 @@ bin/
 # Ficheros de bases de datos
 *.db
 *.sql
+!FilmApp_Server/src/main/resources/database_schema.sql
 *.sqlite
 *.h2.db
 
