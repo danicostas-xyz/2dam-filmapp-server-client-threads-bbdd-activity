@@ -38,18 +38,6 @@ public interface DaoDirector {
 	Director getDirectorByName(String directorName);
 
 	/**
-	 * Recupera una lista de películas buscando por el ID del director.
-	 * 
-	 * @param directorID, el ID del director a buscar.
-	 * @return Si el ID del director pasado por parámetro coincide con algún
-	 *         director de la persistencia, devuelve una objeto List con las
-	 *         películas de dicho director. Si se encuentra el director, pero no
-	 *         tiene ninguna película, se devuelve una Lista vacía. Si se produce
-	 *         alguna excepción de I/O o de SQL, se sevuelve null.
-	 */
-	List<Film> getFilmsByDirectorId(int directorID);
-
-	/**
 	 * Modifica un director de la persistencia buscando por el ID del director.
 	 * 
 	 * @param directorID, el ID del director a modificar.

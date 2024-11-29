@@ -1,5 +1,8 @@
 package model.persistence.interfaces;
 
+import java.util.List;
+
+import main.entity.Director;
 import main.entity.Film;
 
 public interface DaoFilm {
@@ -12,7 +15,7 @@ public interface DaoFilm {
 	 *         se haya añadido por error en algún dato, null en caso de que haya
 	 *         sucedido una I/O o SQL Exception
 	 */
-	Integer createFilm(Film f);
+	Integer createFilm(Film f, Director d);
 
 	/**
 	 * Recupera una película de la persistencia buscando por el ID de la película.
@@ -44,6 +47,18 @@ public interface DaoFilm {
 	 *         que haya sucedido una I/O o SQL Exception
 	 */
 	Integer updateFilmById(int filmID);
+	
+	/**
+	 * Recupera una lista de películas buscando por el ID del director.
+	 * 
+	 * @param directorID, el ID del director a buscar.
+	 * @return Si el ID del director pasado por parámetro coincide con algún
+	 *         director de la persistencia, devuelve una objeto List con las
+	 *         películas de dicho director. Si se encuentra el director, pero no
+	 *         tiene ninguna película, se devuelve una Lista vacía. Si se produce
+	 *         alguna excepción de I/O o de SQL, se sevuelve null.
+	 */
+	List<Film> getFilmsByDirectorId(int directorID);
 
 	/**
 	 * Elimina una película de la persistencia buscando por el ID de la película.
