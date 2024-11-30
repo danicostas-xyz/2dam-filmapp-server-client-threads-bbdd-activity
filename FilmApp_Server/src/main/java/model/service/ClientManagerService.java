@@ -8,6 +8,7 @@ import java.net.Socket;
 import java.util.List;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 
 import main.entity.Director;
 import main.entity.Film;
@@ -28,7 +29,7 @@ public class ClientManagerService implements Runnable {
 		this.filmService = FilmService.getInstance();
 		this.directorService = DirectorService.getInstance();
 		this.gson = new Gson();
-		thread = new Thread(this, "Cliente " + num_cliente++);
+		thread = new Thread(this, "User " + num_cliente++);
 		thread.start();
 	}
 
@@ -36,6 +37,7 @@ public class ClientManagerService implements Runnable {
 	public void run() {
 
 		boolean connectionStatus = true;
+		String response = "";
 
 		try (InputStreamReader isr = new InputStreamReader(socketToClient.getInputStream());
 				PrintStream ps = new PrintStream(socketToClient.getOutputStream());
@@ -43,81 +45,108 @@ public class ClientManagerService implements Runnable {
 
 			while (connectionStatus) {
 
-				String response = "";
+				// Input message ("X_OBJECT") / Request from client.
 
-				// Input message
-				String inputMessage = br.readLine();
-				String clientChoice = inputMessage.split("_")[0];
-				Object objectSend = gson.fromJson(inputMessage.split("_")[1], Object.class);
-				System.out.println("Mensaje del cliente " + Thread.currentThread().getName() + ": " + clientChoice);
+				String requestInput = br.readLine();
+				String requestChoice = requestInput.split("_")[0];
+				String requestObject = requestInput.split("_")[1];
 
-				// Output message
-				if (clientChoice.equalsIgnoreCase("FIN")) {
-					System.out.println("Cerramos conexión a petición del cliente.");
-					connectionStatus = false;
-					ps.println("OK");
-					// Enviamos mensaje para cerrar socket en el lado del cliente.
-					socketToClient.close();
-					socketsArray.remove(this.socketToClient);
-					System.out.println("- Clientes conectados: " + socketsArray.size());
+				System.out.println("User [" + Thread.currentThread().getName() + "] requested option: " + requestChoice);
+				System.out.println("Request data: " + requestObject);
+
+				// Output message / Response to client.
+
+				if (requestChoice.equalsIgnoreCase("END")) {
+					System.out.println("Connection ended by user request."); // Log message in server console.
+					connectionStatus = false; // Sets connectionStatus to false to exit while loop.
+					ps.println("OK"); // Sends signal to client to close socket.
+					socketToClient.close(); // Closes socket in server.
+					socketsArray.remove(this.socketToClient); // Deletes THIS socket from the Server.java socket list
+					System.out.println("- Users Online: " + socketsArray.size()); // Shows the number of clients (THIS
+																					// one is no longer active).
 				} else {
-
-					switch (Integer.parseInt(clientChoice)) {
-					case 0:
-						// Create Film
-						response = gson.toJson(filmService.createFilm((Film) objectSend));
-						break;
-					case 1:
-						// Get Film By ID
-						
-						response = gson.toJson(filmService.getFilmById(Integer.parseInt(inputMessage.split("_")[1])));
-						break;
-					case 2:
-						// Get Film By Title
-						response = gson.toJson(filmService.getFilmByTitle((String) objectSend));
-						break;
-					case 3:
-						// Update Film
-						response = gson.toJson(filmService.updateFilmById((Film) objectSend));
-						break;
-					case 4:
-						// Get Films By Director ID
-						response = gson.toJson(filmService.getFilmsByDirectorId(num_cliente));
-						break;
-					case 5:
-						// Delete Film By ID
-						response = gson.toJson(filmService.deleteFilmById((Integer) objectSend));
-						break;
-					case 7:
-						// Create Director
-						Director d = gson.fromJson(inputMessage.split("_")[1], Director.class);
-						response = gson.toJson(directorService.createDirector(d));
-						break;
-					case 8:
-						// Get Director By ID
-						response = gson.toJson(directorService.getDirectorById((Integer) objectSend));
-						break;
-					case 9:
-						// Get Director By Name
-						response = gson.toJson(directorService.getDirectorByName((String) objectSend));
-						break;
-					case 10:
-						// Update Director By ID
-						response = gson.toJson(directorService.updateDirectorById((Director) objectSend));
-						break;
-					case 11:
-						// Delete Director By ID
-						response = gson.toJson(directorService.deleteDirectorById((Integer) objectSend));
-						break;
-					}
-
-					ps.println(response);
+					response = choiceHandler(response, ps, requestChoice, requestObject);
+					System.out.println("Response to User [" + Thread.currentThread().getName() + "] -> " + response);
 				}
 			}
 
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			response = "ERROR: Connection error. Try again later.";
 			e.printStackTrace();
+		} catch (NumberFormatException e) {
+			response = "ERROR: Invalid numeric input.";
+		} catch (JsonSyntaxException e) {
+			response = "ERROR: Malformed JSON.";
+		} catch (Exception e) {
+			response = "ERROR: An unexpected error occurred.";
 		}
+	}
+
+	private String choiceHandler(String response, PrintStream ps, String requestChoice, String requestObject) {
+		Film film = null;
+		Director director = null;
+		int filmID = 0;
+		int directorID = 0;
+
+		switch (Integer.parseInt(requestChoice)) {
+		case 0:
+			// Create Film
+			film = gson.fromJson(requestObject, Film.class);
+			response = gson.toJson(filmService.createFilm(film));
+			break;
+		case 1:
+			// Get Film By ID
+			filmID = Integer.parseInt(requestObject);
+			response = gson.toJson(filmService.getFilmById(filmID));
+			break;
+		case 2:
+			// Get Film By Title
+			String filmTitle = requestObject;
+			response = gson.toJson(filmService.getFilmByTitle(filmTitle));
+			break;
+		case 3:
+			// Update Film By ID
+			film = gson.fromJson(requestObject, Film.class);
+			response = gson.toJson(filmService.updateFilmById(film));
+			break;
+		case 4:
+			// Get Films By Director ID
+			directorID = Integer.parseInt(requestObject);
+			response = gson.toJson(filmService.getFilmsByDirectorId(directorID));
+			break;
+		case 5:
+			// Delete Film By ID
+			filmID = Integer.parseInt(requestObject);
+			response = gson.toJson(filmService.deleteFilmById(filmID));
+			break;
+		case 7:
+			// Create Director
+			director = gson.fromJson(requestObject, Director.class);
+			response = gson.toJson(directorService.createDirector(director));
+			break;
+		case 8:
+			// Get Director By ID
+			directorID = Integer.parseInt(requestObject);
+			response = gson.toJson(directorService.getDirectorById(directorID));
+			break;
+		case 9:
+			// Get Director By Name
+			String directorName = requestObject;
+			response = gson.toJson(directorService.getDirectorByName(directorName));
+			break;
+		case 10:
+			// Update Director By ID
+			director = gson.fromJson(requestObject, Director.class);
+			response = gson.toJson(directorService.updateDirectorById(director));
+			break;
+		case 11:
+			// Delete Director By ID
+			directorID = Integer.parseInt(requestObject);
+			response = gson.toJson(directorService.deleteDirectorById(directorID));
+			break;
+		}
+
+		ps.println(response);
+		return response;
 	}
 }
