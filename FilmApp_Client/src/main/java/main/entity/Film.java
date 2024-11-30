@@ -72,7 +72,16 @@ public class Film {
 
 	@Override
 	public String toString() {
-		return "Film [id=" + id + ", title=" + title + ", rating=" + rating + ", director=" + director + "]";
+	    return String.format(
+	        "\n----- Film Details -----\n" +
+	        "ID: %d\n" +
+	        "Title: %s\n" +
+	        "Rating: %.1f\n" +
+	        "Director: %s\n" +
+	        "------------------------",
+	        id, title, rating, director.getName()
+	    );
 	}
+
 
 }

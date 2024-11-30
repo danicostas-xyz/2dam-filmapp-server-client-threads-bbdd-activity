@@ -47,7 +47,21 @@ public class Director {
 
 	@Override
 	public String toString() {
-		return "Director [id=" + id + ", name=" + name + ", filmList=" + filmList + "]";
+	    
+	    StringBuilder list = new StringBuilder();
+	    
+	    for (Film film : filmList) {
+	        list.append("\t- " + film).append("\n");  
+	    }
+	    
+	    return String.format(
+	        "\n----- Director Details -----\n" +
+	        "ID: %d\n" +
+	        "Name: %s\n" +
+	        "Films Directed:\n%s" +
+	        "----------------------------",
+	        id, name, list.toString()
+	    );
 	}
 
 	@Override
