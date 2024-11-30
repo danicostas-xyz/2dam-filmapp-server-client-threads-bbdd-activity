@@ -39,7 +39,6 @@ public class DaoDirectorMySQL implements DaoDirector {
 			ps.setString(1, d.getName());
 
 			result = ps.executeUpdate();
-
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

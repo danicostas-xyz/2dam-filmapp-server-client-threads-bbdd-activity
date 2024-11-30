@@ -2,17 +2,19 @@ package model.service;
 
 import main.entity.Director;
 import model.persistence.dao.DaoDirectorMySQL;
+import model.persistence.interfaces.DaoDirector;
 
 public class DirectorService {
 
-	private DaoDirectorMySQL dao;
+	private DaoDirector dao;
 
 	public static DirectorService directorService;
 
 	private DirectorService() {
+		this.dao = DaoDirectorMySQL.getInstance();
 	}
 
-	public static DirectorService getInstance() {
+	public static synchronized DirectorService getInstance() {
 		return (directorService == null) ? directorService = new DirectorService() : directorService;
 	}
 
@@ -24,7 +26,7 @@ public class DirectorService {
 	 *         se haya añadido por error en algún dato, null en caso de que haya
 	 *         sucedido una I/O o SQL Exception
 	 */
-	public Integer createDirector(Director d) {
+	public synchronized Integer createDirector(Director d) {
 		return dao.createDirector(d);
 	}
 
@@ -36,7 +38,7 @@ public class DirectorService {
 	 *         un objeto Director con dicho director. Si no hay coincidencias,
 	 *         devuelve null.
 	 */
-	public Director getDirectorById(int directorID) {
+	public synchronized Director getDirectorById(int directorID) {
 		return dao.getDirectorById(directorID);
 	}
 
@@ -48,7 +50,7 @@ public class DirectorService {
 	 *         devuelve un objeto Director con dicho director. Si no hay
 	 *         coincidencias, devuelve null.
 	 */
-	public Director getDirectorByName(String directorName) {
+	public synchronized Director getDirectorByName(String directorName) {
 		return dao.getDirectorByName(directorName);
 	}
 
@@ -60,8 +62,8 @@ public class DirectorService {
 	 *         no se haya modificado por no encontrarse el director, null en caso de
 	 *         que haya sucedido una I/O o SQL Exception
 	 */
-	public Integer updateDirectorById(Director d) {
-		return updateDirectorById(d);
+	public synchronized Integer updateDirectorById(Director d) {
+		return dao.updateDirectorById(d);
 	}
 
 	/**
@@ -72,8 +74,8 @@ public class DirectorService {
 	 *         se haya eliminado por no encontrarse el director, null en caso de que
 	 *         haya sucedido una I/O o SQL Exception
 	 */
-	public Integer deleteDirectorById(int directorID) {
-		return deleteDirectorById(directorID);
+	public synchronized Integer deleteDirectorById(int directorID) {
+		return dao.deleteDirectorById(directorID);
 	}
 
 }

@@ -30,7 +30,7 @@ public class DaoFilmMySQL implements DaoFilm {
 	private String pass = AppConfig.getInstance().getProperty("pass");
 
 	@Override
-	public Integer createFilm(Film f, Director d) {
+	public Integer createFilm(Film f) {
 
 		Integer result = null;
 
@@ -39,7 +39,7 @@ public class DaoFilmMySQL implements DaoFilm {
 			String query = "INSERT INTO film (title, id_director, rating) VALUES (?, ?, ?)";
 			PreparedStatement ps = conn.prepareStatement(query);
 			ps.setString(1, f.getTitle());
-			ps.setInt(2, d.getId());
+			ps.setInt(2, f.getDirector().getId());
 			ps.setDouble(3, f.getRating());
 
 			result = ps.executeUpdate();
@@ -61,7 +61,7 @@ public class DaoFilmMySQL implements DaoFilm {
 			String query = "SELECT * FROM film WHERE id=?";
 			PreparedStatement ps = conn.prepareStatement(query);
 			ps.setInt(1, filmID);
-			f = resultSetHandler(ps).get(0);
+			f = resultSetHandler(ps, conn).get(0);
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -80,7 +80,7 @@ public class DaoFilmMySQL implements DaoFilm {
 			String query = "SELECT * FROM film WHERE title=?";
 			PreparedStatement ps = conn.prepareStatement(query);
 			ps.setString(1, filmTitle);
-			f = resultSetHandler(ps).get(0);
+//			f = resultSetHandler(ps).get(0);
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -99,7 +99,7 @@ public class DaoFilmMySQL implements DaoFilm {
 			String query = "SELECT * FROM film WHERE id_director=?";
 			PreparedStatement ps = conn.prepareStatement(query);
 			ps.setInt(1, directorID);
-			filmList = resultSetHandler(ps);
+//			filmList = resultSetHandler(ps);
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -150,7 +150,7 @@ public class DaoFilmMySQL implements DaoFilm {
 	}
 
 	// TODO Private Method Documentation
-	private List<Film> resultSetHandler(PreparedStatement ps) {
+	private List<Film> resultSetHandler(PreparedStatement ps, Connection conn) {
 
 		List<Film> filmList = new ArrayList<>();
 		Film film = null;
@@ -163,7 +163,15 @@ public class DaoFilmMySQL implements DaoFilm {
 				film = new Film();
 				film.setId(rs.getInt(1));
 				film.setTitle(rs.getString(2));
-				film.setDirector(DaoDirectorMySQL.getInstance().getDirectorById(rs.getInt(3)));
+				Director d  = new Director();
+				PreparedStatement psDirector = conn.prepareStatement("SELECT * FROM director WHERE id=?");
+				psDirector.setInt(1, rs.getInt(3));
+				ResultSet rsDirector = psDirector.executeQuery();
+				if(rsDirector.next()) {
+					d.setId(rsDirector.getInt(1));
+					d.setName(rsDirector.getString(2));
+				}
+				film.setDirector(d);
 
 				filmList.add(film);
 			}

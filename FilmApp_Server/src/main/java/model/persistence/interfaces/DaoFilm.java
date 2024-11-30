@@ -2,7 +2,6 @@ package model.persistence.interfaces;
 
 import java.util.List;
 
-import main.entity.Director;
 import main.entity.Film;
 
 public interface DaoFilm {
@@ -15,7 +14,7 @@ public interface DaoFilm {
 	 *         se haya añadido por error en algún dato, null en caso de que haya
 	 *         sucedido una I/O o SQL Exception
 	 */
-	Integer createFilm(Film f, Director d);
+	Integer createFilm(Film f);
 
 	/**
 	 * Recupera una película de la persistencia buscando por el ID de la película.

@@ -2,20 +2,21 @@ package model.service;
 
 import java.util.List;
 
-import main.entity.Director;
 import main.entity.Film;
 import model.persistence.dao.DaoFilmMySQL;
+import model.persistence.interfaces.DaoFilm;
 
 public class FilmService {
 
-	private DaoFilmMySQL dao;
+	private DaoFilm dao;
 
 	public static FilmService filmService;
 
 	private FilmService() {
+		this.dao = DaoFilmMySQL.getInstance();
 	}
 
-	public static FilmService getInstance() {
+	public static synchronized FilmService getInstance() {
 		return (filmService == null) ? filmService = new FilmService() : filmService;
 	}
 
@@ -27,8 +28,8 @@ public class FilmService {
 	 *         se haya añadido por error en algún dato, null en caso de que haya
 	 *         sucedido una I/O o SQL Exception
 	 */
-	public Integer createFilm(Film f, Director d) {
-		return dao.createFilm(f, d);
+	public Integer createFilm(Film f) {
+		return dao.createFilm(f);
 	}
 
 	/**
