@@ -7,7 +7,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
-import model.service.ClientManagerService;
+import model.service.ClientConnectionService;
 
 public class Server {
 	
@@ -27,7 +27,7 @@ public class Server {
 					System.out.println("Waiting for a client...");
 					Socket socketToClient = serverSocket.accept();
 					socketsArray.add(socketToClient);
-					new ClientManagerService(socketToClient, socketsArray);
+					new ClientConnectionService(socketToClient, socketsArray);
 				}
 				
 			} catch (IOException e) {

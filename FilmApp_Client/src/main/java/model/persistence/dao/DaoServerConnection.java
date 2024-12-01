@@ -18,6 +18,7 @@ public class DaoServerConnection {
 	private final int PORT = 2024;
 	private InetSocketAddress address;
 	private Gson gson;
+	private final String END_CONNECTION_SIGNAL = "OK";
 
 	public static DaoServerConnection dao;
 
@@ -55,7 +56,7 @@ public class DaoServerConnection {
 				// Input message
 				String entrada = br.readLine();
 
-				if (entrada.equalsIgnoreCase("OK")) {
+				if (entrada.equalsIgnoreCase(END_CONNECTION_SIGNAL)) {
 					System.out.println("Server cierra conexión");
 					connectionStatus = false;
 					socketToServer.close();
@@ -69,5 +70,5 @@ public class DaoServerConnection {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	}
+	} 
 }

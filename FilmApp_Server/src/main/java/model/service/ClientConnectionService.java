@@ -13,7 +13,7 @@ import com.google.gson.JsonSyntaxException;
 import main.entity.Director;
 import main.entity.Film;
 
-public class ClientManagerService implements Runnable {
+public class ClientConnectionService implements Runnable {
 
 	private Socket socketToClient;
 	private Thread thread;
@@ -23,7 +23,7 @@ public class ClientManagerService implements Runnable {
 	private DirectorService directorService;
 	private Gson gson;
 
-	public ClientManagerService(Socket socketToClient, List<Socket> socketsArray) {
+	public ClientConnectionService(Socket socketToClient, List<Socket> socketsArray) {
 		this.socketToClient = socketToClient;
 		this.socketsArray = socketsArray;
 		this.filmService = FilmService.getInstance();
