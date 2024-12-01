@@ -1,19 +1,23 @@
 package model.cli;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
+import main.entity.Director;
+import main.entity.Film;
 import model.service.InputOutputDataService;
 import model.service.ServerConnectionService;
 
 public class UserInterfaceCLI {
 
-	private final int LOW_SPEED = 50;
 	private final int ULTRA_LOW_SPEED = 750;
-	private final int ULTRA_FAST_SPEED = 5;
-	private final int FAST_SPEED = 25;
 	private final int VERY_LOW_SPEED = 150;
-	
+	private final int LOW_SPEED = 50;
+	private final int FAST_SPEED = 25;
+	private final int ULTRA_FAST_SPEED = 5;
+
 	private InputOutputDataService inOutDataService;
 	private ServerConnectionService serverConnection;
 	private boolean keepRuning;
@@ -40,11 +44,11 @@ public class UserInterfaceCLI {
 		print3Points(ULTRA_LOW_SPEED, 5);
 		printSlowly("\nIniciando conexión", LOW_SPEED);
 		print3Points(ULTRA_LOW_SPEED, 5);
-		
+
 		try {
 			serverConnection.startConnection();
 			printlnSlowly("\nConexión establecida", LOW_SPEED);
-			
+
 			System.out.println("\n================================");
 			System.out.println("          MENÚ PRINCIPAL     ");
 			System.out.println("================================");
@@ -140,92 +144,196 @@ public class UserInterfaceCLI {
 			System.out.println("\n============================");
 			System.out.println("       FIN DEL PROGRAMA      ");
 			System.out.println("=============================");
-			
+
 		} catch (IOException e) {
 			printlnSlowly("\nError en la conexión.", LOW_SPEED);
 //			e.printStackTrace();
 			printlnSlowly(e.getLocalizedMessage(), LOW_SPEED);
 		}
-		
-		
 
 	}
 
 	private void createDirector(int option) {
-		// TODO Auto-generated method stub
-		
+
+		Director director = new Director();
+
+		System.out.println("- Nombre: ");
+		director.setName(scStr.nextLine());
+
+		String request = inOutDataService.requestFormatter(option, director);
+		String response = "";
+
+		try {
+			response = serverConnection.sendData(request);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		if (Integer.parseInt(response) == 1) {
+			System.out.println("Director creado correctamente");
+		} else
+			System.out.println("Ha habido un error al crear al director");
+
 	}
 
 	private void getDirectorByName(int option) {
-		// TODO Auto-generated method stub
+		Director director = new Director();
+
+		System.out.println("- Director Name: ");
+		int directorName = scInt.nextInt();
+		director.setId(directorName);
+
+		String request = inOutDataService.requestFormatter(option, directorName);
+		String response = "";
+
+		try {
+			response = serverConnection.sendData(request);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		
+		director = (Director) inOutDataService.responseFormatter(option, response);
+		System.out.println(director);
+
 	}
 
 	private void getDirectorByID(int option) {
-		// TODO Auto-generated method stub
+		Director director = new Director();
+
+		System.out.println("- Director ID: ");
+		int directorID = scInt.nextInt();
+		director.setId(directorID);
+
+		String request = inOutDataService.requestFormatter(option, directorID);
+		String response = "";
+
+		try {
+			response = serverConnection.sendData(request);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		
+		director = (Director) inOutDataService.responseFormatter(option, response);
+		System.out.println(director);
+
 	}
 
+	@SuppressWarnings("unchecked")
 	private void getFilmsByDirectorId(int option) {
-		// TODO Auto-generated method stub
+		Director director = new Director();
+
+		System.out.println("- Director ID: ");
+		int directorID = scInt.nextInt();
+		director.setId(directorID);
+
+		String request = inOutDataService.requestFormatter(option, directorID);
+		String response = "";
+
+		try {
+			response = serverConnection.sendData(request);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		
+		List<Film> filmList = new ArrayList<>();
+		
+		filmList = (ArrayList<Film>) inOutDataService.responseFormatter(option, response);
+		System.out.println(filmList);
+
 	}
 
 	private void deleteDirectorByID(int option) {
 		// TODO Auto-generated method stub
-		
 	}
 
 	private void deleteFilmByID(int option) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	private void getFilmByTitle(int option) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	private void getFilmByID(int option) {
-		// TODO Auto-generated method stub
+		Film film = new Film();
+
+		System.out.println("- Film ID: ");
+		int filmID = scInt.nextInt();
+		film.setId(filmID);
+
+		String request = inOutDataService.requestFormatter(option, filmID);
+		String response = "";
+
+		try {
+			response = serverConnection.sendData(request);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		
+		film = (Film) inOutDataService.responseFormatter(option, response);
+		System.out.println(film);
+
 	}
 
 	private void updateFilmByID(int option) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	private void updateDirectorByID(int option) {
 		// TODO Auto-generated method stub
-		
-	}
 
+	}
 
 	private void createFilm(int option) {
-		// TODO Auto-generated method stub
-		
+
+		Film film = new Film();
+		Director director = new Director();
+
+		System.out.println("- Título: ");
+		film.setTitle(scStr.nextLine());
+		System.out.println("- DirectorID: ");
+		int directorID = scInt.nextInt();
+		director.setId(directorID);
+		film.setDirector(director);
+		System.out.println("- Rating: ");
+		film.setRating(scInt.nextDouble());
+
+		String request = inOutDataService.requestFormatter(option, film);
+		String response = "";
+
+		try {
+			response = serverConnection.sendData(request);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		if (Integer.parseInt(response) == 1) {
+			System.out.println("Película creada correctamente");
+		} else
+			System.out.println("Ha habido un error al crear la película");
+
 	}
-
-
 
 	private void printMainMenu() {
 		System.out.println("\n================================");
-		printlnSlowly("- 0. SALIR", 5);
-		printlnSlowly("- 1. CREAR DIRECTOR", 5);
-		printlnSlowly("- 2. CREAR PELÍCULA", 5);
-		printlnSlowly("- 3. MODIFICAR DIRECTOR POR ID", 5);
-		printlnSlowly("- 4. MODIFICAR PELÍCULA POR ID", 5);
-		printlnSlowly("- 5. SELECCIONAR PELÍCULA POR ID", 5);
-		printlnSlowly("- 6. SELECCIONAR PELÍCULA POR TÍTULO", 5);
-		printlnSlowly("- 7. ELIMINAR PELÍCULA POR ID", 5);
-		printlnSlowly("- 8. ELIMINAR DIRECTOR POR ID", 5);
-		printlnSlowly("- 9. OBTENER LISTA DE PELÍCULAS POR ID DE DIRECTOR", 5);
-		printlnSlowly("- 10. SELECCIONAR DIRECTOR POR ID", 5);
-		printlnSlowly("- 11. SELECCIONAR DIRECTOR POR NOMBRE", 5);
+		printlnSlowly("🚪  0. SALIR", 5);
+		printlnSlowly("🎬  1. CREAR DIRECTOR", 5);
+		printlnSlowly("📽️  2. CREAR PELÍCULA", 5);
+		printlnSlowly("✏️  3. MODIFICAR DIRECTOR POR ID", 5);
+		printlnSlowly("✏️  4. MODIFICAR PELÍCULA POR ID", 5);
+		printlnSlowly("🔍  5. SELECCIONAR PELÍCULA POR ID", 5);
+		printlnSlowly("🔎  6. SELECCIONAR PELÍCULA POR TÍTULO", 5);
+		printlnSlowly("🗑️  7. ELIMINAR PELÍCULA POR ID", 5);
+		printlnSlowly("🗑️  8. ELIMINAR DIRECTOR POR ID", 5);
+		printlnSlowly("🎞️  9. OBTENER LISTA DE PELÍCULAS POR ID DE DIRECTOR", 5);
+		printlnSlowly("🧑‍  10. SELECCIONAR DIRECTOR POR ID", 5);
+		printlnSlowly("🔤  11. SELECCIONAR DIRECTOR POR NOMBRE", 5);
 
 		System.out.println("================================\n");
-		printSlowly("- Seleccione una opción: ", 5);
+		printSlowly("➡️  Seleccione una opción: ", 5);
 	}
 
 	private int validarIntNoVacio(String atributo) {
