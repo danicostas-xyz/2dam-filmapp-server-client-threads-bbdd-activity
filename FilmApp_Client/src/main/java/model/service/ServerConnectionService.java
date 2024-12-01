@@ -37,7 +37,7 @@ public class ServerConnectionService {
 		return (serverConnection == null) ? serverConnection = new ServerConnectionService() : serverConnection;
 	}
 
-	public void startConnection() {
+	public void startConnection() throws IOException {
 		address = new InetSocketAddress(IP_ADDRESS, PORT);
 		try {
 			socketToServer = new Socket();
@@ -47,15 +47,15 @@ public class ServerConnectionService {
 			br = new BufferedReader(isr);
 
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+//			e.printStackTrace();
+			throw e;
 		}
 		connectionStatus = true;
 	}
 
 	/**
 	 * Método que recibe una request "X_JSON" y devuelve la respuesta del server en
-	 * formato String (JSON o String puro)
+	 * formato ArraString (JSON o String puro)
 	 * 
 	 * @param requestOutput "X_JSON"
 	 * @return

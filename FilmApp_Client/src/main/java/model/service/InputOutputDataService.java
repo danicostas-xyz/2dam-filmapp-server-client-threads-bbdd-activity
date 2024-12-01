@@ -93,19 +93,25 @@ public class InputOutputDataService {
 		switch (requestChoice) {
 		case 1:
 			// Get Film By ID (Returns Film)
+			return gson.fromJson(response, Film.class);
 		case 2:
 			// Get Film By Title (Returns Film)
 			return gson.fromJson(response, Film.class);
 		case 0:
 			// Create Film (Returns Integer)
+			return gson.fromJson(response, Integer.class);
 		case 3:
 			// Update Film By ID (Returns Integer)
+			return gson.fromJson(response, Integer.class);
 		case 5:
 			// Delete Film By ID (Returns Integer)
+			return gson.fromJson(response, Integer.class);
 		case 7:
 			// Create Director (Returns Integer)
+			return gson.fromJson(response, Integer.class);
 		case 10:
 			// Update Director By ID (Returns Integer)
+			return gson.fromJson(response, Integer.class);
 		case 11:
 			// Delete Director By ID (Returns Integer)
 			return gson.fromJson(response, Integer.class);
@@ -114,6 +120,7 @@ public class InputOutputDataService {
 			return gson.fromJson(response, ArrayList.class);
 		case 8:
 			// Get Director By ID (Returns Director)
+			return gson.fromJson(response, Director.class);
 		case 9:
 			// Get Director By Name (Returns Director)
 			return gson.fromJson(response, Director.class);
