@@ -80,7 +80,7 @@ public class DaoFilmMySQL implements DaoFilm {
 			String query = "SELECT * FROM film WHERE title=?";
 			PreparedStatement ps = conn.prepareStatement(query);
 			ps.setString(1, filmTitle);
-//			f = resultSetHandler(ps).get(0);
+			f = resultSetHandler(ps, conn).get(0);
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -99,7 +99,7 @@ public class DaoFilmMySQL implements DaoFilm {
 			String query = "SELECT * FROM film WHERE id_director=?";
 			PreparedStatement ps = conn.prepareStatement(query);
 			ps.setInt(1, directorID);
-//			filmList = resultSetHandler(ps);
+			filmList = resultSetHandler(ps, conn);
 
 		} catch (SQLException e) {
 			e.printStackTrace();
