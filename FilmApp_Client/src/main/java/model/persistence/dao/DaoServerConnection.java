@@ -6,7 +6,6 @@ import java.io.InputStreamReader;
 import java.io.PrintStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.util.Scanner;
 
 import com.google.gson.Gson;
 
@@ -18,7 +17,6 @@ public class DaoServerConnection {
 	private final String IP_ADDRESS = "127.0.0.1";
 	private final int PORT = 2024;
 	private InetSocketAddress address;
-	private Scanner sc = new Scanner(System.in);
 	private Gson gson;
 
 	public static DaoServerConnection dao;
@@ -32,7 +30,7 @@ public class DaoServerConnection {
 		return (dao == null) ? dao = new DaoServerConnection() : dao;
 	}
 
-	public void conexion() {
+	public void sendData(String requestOutput) {
 
 		boolean connectionStatus = true;
 
@@ -46,17 +44,16 @@ public class DaoServerConnection {
 
 			while (connectionStatus) {
 
+				int requestChoice = 0;
+				String requestObject = "";
+				
 				// Output message
 				Director d = new Director();
 				d.setName("David Lynch");
-				System.out.println("Escribe mensaje al server: ");
-				String mensaje = sc.nextLine();
-				ps.println("1_" + 1);
+				ps.println(requestChoice + "_" + requestObject);
 
-				System.out.println("Paso antes del readLine()");
 				// Input message
 				String entrada = br.readLine();
-				System.out.println("Paso antes del if");
 
 				if (entrada.equalsIgnoreCase("OK")) {
 					System.out.println("Server cierra conexión");
@@ -65,7 +62,6 @@ public class DaoServerConnection {
 				} else {
 					Film f = (Film) gson.fromJson(entrada, Film.class);
 					System.out.println(f);
-					System.out.println("Paso por la salida");
 				}
 			}
 

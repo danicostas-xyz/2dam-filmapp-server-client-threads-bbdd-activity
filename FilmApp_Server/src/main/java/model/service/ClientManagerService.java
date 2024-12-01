@@ -146,7 +146,7 @@ public class ClientManagerService implements Runnable {
 			break;
 		}
 
-		ps.println(response);
+		ps.println(response); // Sends the response to the client.
 		return response;
 	}
 }
