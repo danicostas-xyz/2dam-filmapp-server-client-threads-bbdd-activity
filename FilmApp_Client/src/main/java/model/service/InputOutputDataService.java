@@ -27,29 +27,29 @@ public class InputOutputDataService {
 		String jsonFormat = "";
 
 		switch (requestChoice) {
-		case 0:
+		case 1:
 			// Create Film
 			film = (Film) requestObject;
 			jsonFormat = gson.toJson(film);
 			return requestChoice + "_" + jsonFormat;
-		case 1:
+		case 2:
 			// Get Film By ID
 			filmID = (Integer) requestObject;
 			return requestChoice + "_" + filmID;
-		case 2:
+		case 3:
 			// Get Film By Title
 			String filmTitle = (String) requestObject;
 			return requestChoice + "_" + filmTitle;
-		case 3:
+		case 4:
 			// Update Film By ID
 			film = (Film) requestObject;
 			jsonFormat = gson.toJson(film);
 			return requestChoice + "_" + jsonFormat;
-		case 4:
+		case 5:
 			// Get Films By Director ID
 			directorID = (Integer) requestObject;
 			return requestChoice + "_" + directorID;
-		case 5:
+		case 6:
 			// Delete Film By ID
 			filmID = (Integer) requestObject;
 			return requestChoice + "_" + filmID;
@@ -92,38 +92,39 @@ public class InputOutputDataService {
 
 		switch (requestChoice) {
 		case 1:
-			// Get Film By ID (Returns Film)
-			return gson.fromJson(response, Film.class);
-		case 2:
-			// Get Film By Title (Returns Film)
-			return gson.fromJson(response, Film.class);
-		case 0:
 			// Create Film (Returns Integer)
 			return gson.fromJson(response, Integer.class);
+		case 2:
+			// Get Film By ID (Returns Film)
+			return gson.fromJson(response, Film.class);
 		case 3:
+			// Get Film By Title (Returns Film)
+			return gson.fromJson(response, Film.class);
+		case 4:
 			// Update Film By ID (Returns Integer)
 			return gson.fromJson(response, Integer.class);
 		case 5:
+			// Get List of Films By Director ID (Returns ArrayList of Film)
+			return gson.fromJson(response, ArrayList.class);
+		case 6:
 			// Delete Film By ID (Returns Integer)
 			return gson.fromJson(response, Integer.class);
 		case 7:
 			// Create Director (Returns Integer)
 			return gson.fromJson(response, Integer.class);
-		case 10:
-			// Update Director By ID (Returns Integer)
-			return gson.fromJson(response, Integer.class);
-		case 11:
-			// Delete Director By ID (Returns Integer)
-			return gson.fromJson(response, Integer.class);
-		case 4:
-			// Get List of Films By Director ID (Returns ArrayList of Film)
-			return gson.fromJson(response, ArrayList.class);
 		case 8:
 			// Get Director By ID (Returns Director)
 			return gson.fromJson(response, Director.class);
 		case 9:
 			// Get Director By Name (Returns Director)
 			return gson.fromJson(response, Director.class);
+		case 10:
+			// Update Director By ID (Returns Integer)
+			return gson.fromJson(response, Integer.class);
+		case 11:
+			// Delete Director By ID (Returns Integer)
+			return gson.fromJson(response, Integer.class);
+			
 		}
 		return null;
 	}

@@ -89,32 +89,32 @@ public class ClientConnectionService implements Runnable {
 		int directorID = 0;
 
 		switch (Integer.parseInt(requestChoice)) {
-		case 0:
+		case 1:
 			// Create Film
 			film = gson.fromJson(requestObject, Film.class);
 			response = gson.toJson(filmService.createFilm(film));
 			break;
-		case 1:
+		case 2:
 			// Get Film By ID
 			filmID = Integer.parseInt(requestObject);
 			response = gson.toJson(filmService.getFilmById(filmID));
 			break;
-		case 2:
+		case 3:
 			// Get Film By Title
 			String filmTitle = requestObject;
 			response = gson.toJson(filmService.getFilmByTitle(filmTitle));
 			break;
-		case 3:
+		case 4:
 			// Update Film By ID
 			film = gson.fromJson(requestObject, Film.class);
 			response = gson.toJson(filmService.updateFilmById(film));
 			break;
-		case 4:
+		case 5:
 			// Get Films By Director ID
 			directorID = Integer.parseInt(requestObject);
 			response = gson.toJson(filmService.getFilmsByDirectorId(directorID));
 			break;
-		case 5:
+		case 6:
 			// Delete Film By ID
 			filmID = Integer.parseInt(requestObject);
 			response = gson.toJson(filmService.deleteFilmById(filmID));
