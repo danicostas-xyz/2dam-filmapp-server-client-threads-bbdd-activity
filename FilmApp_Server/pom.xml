@@ -5,6 +5,9 @@
   <version>0.0.1-SNAPSHOT</version>
   <name>Film App Server</name>
   <description>Server for the Film App </description>
+  <properties>
+        <maven.compiler.release>21</maven.compiler.release>
+    </properties>
     <dependencies>
   	<!-- https://mvnrepository.com/artifact/com.mysql/mysql-connector-j -->
 	<dependency>
